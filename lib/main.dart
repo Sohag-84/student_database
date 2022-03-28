@@ -32,16 +32,29 @@ class NewApp extends StatefulWidget {
 
 class _NewAppState extends State<NewApp> {
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _idController = TextEditingController();
-  TextEditingController _proramIdController = TextEditingController();
-  TextEditingController _gpaController = TextEditingController();
+  final _form = GlobalKey<FormState>();
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _programIdController = TextEditingController();
+  final TextEditingController _gpaController = TextEditingController();
+
+
+  //for clear textField
   void clearText(){
     _nameController.clear();
     _idController.clear();
-    _proramIdController.clear();
+    _programIdController.clear();
     _gpaController.clear();
   }
+  //
+  // // for validate form
+  // void _formValid(){
+  //   final isValid = _form.currentState!.validate();
+  //   if(!isValid){
+  //     return;
+  //   }
+  // }
 
   late String studentName,studentID,programID,studentGPA;
 
@@ -72,13 +85,78 @@ class _NewAppState extends State<NewApp> {
         ),
         body: Padding(
           padding: const EdgeInsets.only(left: 15.0,right: 15),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
+          child: Form(
+            key: _form,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: TextFormField(
+                    validator: (name){
+                      if(name!.isEmpty || name.length<3){
+                        return "Enter a valid name more than 3 character";
+                      }else{
+                        return null;
+                      }
+                    },
+                    controller: _nameController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(13)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(13)),
+                            borderSide: BorderSide(color: Colors.green,width: 2)
+                        ),
+                        labelText: "Name",
+                        hintText: 'Student name'
+                    ),
+                    onChanged: (String name){
+                      getStudentName(name);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: TextFormField(
+                    controller: _idController,
+                    validator: (studentId){
+                      if(studentId!.isEmpty || studentId.length<9){
+                        return "Enter a valid student ID more than 9 character";
+                      }else{
+                        return null;
+                      }
+                    },
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(13)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(13)),
+                            borderSide: BorderSide(color: Colors.green,width: 2)
+                        ),
+                        labelText: "Student ID",
+                        hintText: 'Student ID'
+                    ),
+                    onChanged: (String studentId){
+                      getStudentID(studentId);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: TextFormField(
+                    controller: _programIdController,
+                    validator: (courseId){
+                      if(courseId!.isEmpty || courseId.length<6){
+                        return "Enter a valid course code more than 6 character";
+                      }else{
+                        return null;
+                      }
+                    },
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(13)),
                       ),
@@ -86,20 +164,27 @@ class _NewAppState extends State<NewApp> {
                           borderRadius: BorderRadius.all(Radius.circular(13)),
                           borderSide: BorderSide(color: Colors.green,width: 2)
                       ),
-                      labelText: "Name",
-                      hintText: 'Student name'
+                      labelText: "Course Code",
+                      hintText: 'Course Code'
+                    ),
+                    onChanged: (String programID){
+                      getProgramID(programID);
+                    },
                   ),
-                  onChanged: (String name){
-                    getStudentName(name);
-                  },
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: TextFormField(
-                  controller: _idController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: TextFormField(
+                    controller: _gpaController,
+                    validator: (studentGpa){
+                      if(studentGpa!.isEmpty || studentGpa.length<3){
+                        return "Enter a valid name more than 3 character";
+                      }else{
+                        return null;
+                      }
+                    },
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(13)),
                       ),
@@ -107,112 +192,97 @@ class _NewAppState extends State<NewApp> {
                           borderRadius: BorderRadius.all(Radius.circular(13)),
                           borderSide: BorderSide(color: Colors.green,width: 2)
                       ),
-                      labelText: "Student ID",
-                      hintText: 'Student ID'
+                      labelText: "GPA",
+                      hintText: 'Student GPA'
+                    ),
+                    onChanged: (String gpa){
+                      getStudentGPA(gpa);
+                    },
                   ),
-                  onChanged: (String studentId){
-                    getStudentID(studentId);
-                  },
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: TextFormField(
-                  controller: _proramIdController,
-                  keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(13)),
+                SizedBox(height: MediaQuery.of(context).size.height*0.02,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                        onPressed: ()=>insertData(),
+                        child: const Text("INSERT"),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                        )
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(13)),
-                        borderSide: BorderSide(color: Colors.green,width: 2)
+                    ElevatedButton(
+                        onPressed: ()=>readData(),
+                        child: const Text("READ"),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.orange,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                        )
+                      ),
                     ),
-                    labelText: "Program ID",
-                    hintText: 'Program ID'
-                  ),
-                  onChanged: (String programID){
-                    getProgramID(programID);
-                  },
+                    ElevatedButton(
+                        onPressed: ()=>updateData(),
+                        child: const Text("UPDATE"),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.blueGrey,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                        )
+                      ),
+                    ),
+                    ElevatedButton(
+                        onPressed: ()=>deleteData(),
+                        child: const Text("DELETE"),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.redAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                        )
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: TextFormField(
-                  controller: _gpaController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(13)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(13)),
-                        borderSide: BorderSide(color: Colors.green,width: 2)
-                    ),
-                    labelText: "GPA",
-                    hintText: 'Student GPA'
-                  ),
-                  onChanged: (String gpa){
-                    getStudentGPA(gpa);
-                  },
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height*0.02,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                      onPressed: ()=>insertData(),
-                      child: const Text("INSERT"),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)
-                      )
-                    ),
-                  ),
-                  ElevatedButton(
-                      onPressed: ()=>readData(),
-                      child: const Text("READ"),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.orange,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)
-                      )
-                    ),
-                  ),
-                  ElevatedButton(
-                      onPressed: ()=>updateData(),
-                      child: const Text("UPDATE"),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blueGrey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)
-                      )
-                    ),
-                  ),
-                  ElevatedButton(
-                      onPressed: ()=>deleteData(),
-                      child: const Text("DELETE"),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.redAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)
-                      )
-                    ),
-                  ),
-                ],
-              )
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
+
+
   insertData() {
-    print("inserted data");
+      DocumentReference documentReference = FirebaseFirestore.instance.collection("Mystudent").doc(studentName);
+
+      //create map
+      Map<String, dynamic> student = {
+        "studentName": studentName,
+        "studentID": studentID,
+        "programID": programID,
+        "studentGPA": studentGPA
+      };
+      documentReference.set(student).whenComplete(() => print("$studentName created"));
+      clearText();
+
+  }
+  readData() {
+    DocumentReference documentReference = FirebaseFirestore.instance.collection("Mystudent").doc(studentName);
+    documentReference.get().then((value){
+
+      print(value.get("studentName"));
+      print(value.get("studentID"));
+      print(value.get("programID"));
+      print(value.get("studentGPA"));
+
+    });
     clearText();
+  }
+  updateData() {
     DocumentReference documentReference = FirebaseFirestore.instance.collection("Mystudent").doc(studentName);
 
     //create map
@@ -222,10 +292,14 @@ class _NewAppState extends State<NewApp> {
       "programID": programID,
       "studentGPA": studentGPA
     };
-    documentReference.set(student).whenComplete(() => print("$studentName created"));
+    documentReference.set(student).whenComplete(() => print("$studentName is updated"));
+    clearText();
   }
-  readData() {print("read data");}
-  updateData() {print("updated data");}
-  deleteData() {print("deleted data");}
+  deleteData() {
+    DocumentReference documentReference = FirebaseFirestore.instance.collection("Mystudent").doc(studentName);
+
+    documentReference.delete().whenComplete(() => print("$studentName is deleted successfully"));
+    clearText();
+  }
 }
 
