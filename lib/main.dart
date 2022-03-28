@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 class MyApp extends StatelessWidget {
@@ -15,7 +19,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
         accentColor: Colors.cyan
       ),
-      home: NewApp(),
+      home: const NewApp(),
     );
   }
 }
@@ -27,6 +31,17 @@ class NewApp extends StatefulWidget {
 }
 
 class _NewAppState extends State<NewApp> {
+
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _idController = TextEditingController();
+  TextEditingController _proramIdController = TextEditingController();
+  TextEditingController _gpaController = TextEditingController();
+  void clearText(){
+    _nameController.clear();
+    _idController.clear();
+    _proramIdController.clear();
+    _gpaController.clear();
+  }
 
   late String studentName,studentID,programID,studentGPA;
 
@@ -40,7 +55,7 @@ class _NewAppState extends State<NewApp> {
     this.programID = programID;
   }
   getStudentGPA(studentGPA){
-    this.studentGPA = double.parse(studentGPA) as String;
+    this.studentGPA = studentGPA;
   }
 
 
@@ -62,6 +77,7 @@ class _NewAppState extends State<NewApp> {
               Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: TextFormField(
+                  controller: _nameController,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(13)),
@@ -81,6 +97,7 @@ class _NewAppState extends State<NewApp> {
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: TextFormField(
+                  controller: _idController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(
@@ -101,7 +118,8 @@ class _NewAppState extends State<NewApp> {
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: TextFormField(
-                  keyboardType: TextInputType.number,
+                  controller: _proramIdController,
+                  keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(13)),
@@ -121,6 +139,7 @@ class _NewAppState extends State<NewApp> {
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: TextFormField(
+                  controller: _gpaController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
@@ -191,7 +210,20 @@ class _NewAppState extends State<NewApp> {
     );
   }
 
-  insertData() {print("inserted data");}
+  insertData() {
+    print("inserted data");
+    clearText();
+    DocumentReference documentReference = FirebaseFirestore.instance.collection("Mystudent").doc(studentName);
+
+    //create map
+    Map<String, dynamic> student = {
+      "studentName": studentName,
+      "studentID": studentID,
+      "programID": programID,
+      "studentGPA": studentGPA
+    };
+    documentReference.set(student).whenComplete(() => print("$studentName created"));
+  }
   readData() {print("read data");}
   updateData() {print("updated data");}
   deleteData() {print("deleted data");}
