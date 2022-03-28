@@ -81,6 +81,7 @@ class _NewAppState extends State<NewApp> {
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: TextFormField(
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(13)),
@@ -100,6 +101,7 @@ class _NewAppState extends State<NewApp> {
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: TextFormField(
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(13)),
@@ -119,6 +121,7 @@ class _NewAppState extends State<NewApp> {
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: TextFormField(
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(13)),
