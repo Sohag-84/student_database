@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -28,6 +27,24 @@ class NewApp extends StatefulWidget {
 }
 
 class _NewAppState extends State<NewApp> {
+
+  late String studentName,studentID,programID,studentGPA;
+
+  getStudentName(name){
+    studentName = name;
+  }
+  getStudentID(studentID){
+    this.studentID = studentID;
+  }
+  getProgramID(programID){
+    this.programID = programID;
+  }
+  getStudentGPA(studentGPA){
+    this.studentGPA = double.parse(studentGPA) as String;
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -57,6 +74,7 @@ class _NewAppState extends State<NewApp> {
                       hintText: 'Student name'
                   ),
                   onChanged: (String name){
+                    getStudentName(name);
                   },
                 ),
               ),
@@ -74,7 +92,9 @@ class _NewAppState extends State<NewApp> {
                       labelText: "Student ID",
                       hintText: 'Student ID'
                   ),
-                  onChanged: (String name){},
+                  onChanged: (String studentId){
+                    getStudentID(studentId);
+                  },
                 ),
               ),
               Padding(
@@ -91,7 +111,9 @@ class _NewAppState extends State<NewApp> {
                     labelText: "Program ID",
                     hintText: 'Program ID'
                   ),
-                  onChanged: (String name){},
+                  onChanged: (String programID){
+                    getProgramID(programID);
+                  },
                 ),
               ),
               Padding(
@@ -108,14 +130,67 @@ class _NewAppState extends State<NewApp> {
                     labelText: "GPA",
                     hintText: 'Student GPA'
                   ),
-                  onChanged: (String name){},
+                  onChanged: (String gpa){
+                    getStudentGPA(gpa);
+                  },
                 ),
               ),
+              SizedBox(height: MediaQuery.of(context).size.height*0.02,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      onPressed: ()=>insertData(),
+                      child: const Text("INSERT"),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      )
+                    ),
+                  ),
+                  ElevatedButton(
+                      onPressed: ()=>readData(),
+                      child: const Text("READ"),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.orange,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      )
+                    ),
+                  ),
+                  ElevatedButton(
+                      onPressed: ()=>updateData(),
+                      child: const Text("UPDATE"),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blueGrey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      )
+                    ),
+                  ),
+                  ElevatedButton(
+                      onPressed: ()=>deleteData(),
+                      child: const Text("DELETE"),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.redAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      )
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),
       ),
     );
   }
+
+  insertData() {print("inserted data");}
+  readData() {print("read data");}
+  updateData() {print("updated data");}
+  deleteData() {print("deleted data");}
 }
 
